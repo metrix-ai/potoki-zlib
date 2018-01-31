@@ -11,9 +11,9 @@ homepage:
 bug-reports:
   https://github.com/nikita-volkov/potoki-zlib/issues 
 author:
-  Ilya...
+  Ilya Zubkov <izubkov.forall@gmail.com>
 maintainer:
-  Ilya...
+  Ilya Zubkov <izubkov.forall@gmail.com>
 copyright:
   (c) 2018, Metrix.AI
 license:
@@ -35,7 +35,16 @@ library
   hs-source-dirs:
     library
   default-extensions:
-    Arrows, BangPatterns, ConstraintKinds, DataKinds, DefaultSignatures, DeriveDataTypeable, DeriveFoldable, DeriveFunctor, DeriveGeneric, DeriveTraversable, EmptyDataDecls, FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs, GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms, MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude, NoMonomorphismRestriction, OverloadedStrings, PatternGuards, ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards, ScopedTypeVariables, StandaloneDeriving, TemplateHaskell, TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
+    Arrows, BangPatterns, ConstraintKinds, DataKinds,
+    DefaultSignatures, DeriveDataTypeable, DeriveFoldable,
+    DeriveFunctor, DeriveGeneric, DeriveTraversable, EmptyDataDecls,
+    FlexibleContexts, FlexibleInstances, FunctionalDependencies, GADTs,
+    GeneralizedNewtypeDeriving, LambdaCase, LiberalTypeSynonyms,
+    MagicHash, MultiParamTypeClasses, MultiWayIf, NoImplicitPrelude,
+    NoMonomorphismRestriction, OverloadedStrings, PatternGuards,
+    ParallelListComp, QuasiQuotes, RankNTypes, RecordWildCards,
+    ScopedTypeVariables, StandaloneDeriving, TemplateHaskell,
+    TupleSections, TypeFamilies, TypeOperators, UnboxedTuples
   default-language:
     Haskell2010
   exposed-modules:
@@ -51,3 +60,4 @@ library
     potoki-core >=1.2 && <1.3,
     text >=1 && <2,
     pure-zlib >=0.6 && <0.7
+
