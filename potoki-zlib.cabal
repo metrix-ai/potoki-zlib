@@ -41,6 +41,7 @@ library
   exposed-modules:
     Potoki.Zlib.Transform
   other-modules:
+    Potoki.Zlib.Fetch
     Potoki.Zlib.Prelude
   build-depends:
     base >=4.7 && <5,
