@@ -50,8 +50,8 @@ library
   exposed-modules:
     Potoki.Zlib.Transform
   other-modules:
-    Potoki.Zlib.Fetch
-    Potoki.Zlib.Prelude
+    -- Potoki.Zlib.Fetch
+    -- Potoki.Zlib.Prelude
   build-depends:
     base >=4.7 && <5,
     base-prelude >=1 && <2,
@@ -59,5 +59,5 @@ library
     potoki >=0.6.1 && <0.7,
     potoki-core >=1.2 && <1.3,
     text >=1 && <2,
-    pure-zlib >=0.6 && <0.7
+    zlib >= 0.6.1.2 && < 0.7
 

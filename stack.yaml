@@ -7,5 +7,4 @@ extra-deps:
 - bug-1.0.1
 - potoki-0.6.4
 - potoki-core-1.2
-- pure-zlib-0.6
 

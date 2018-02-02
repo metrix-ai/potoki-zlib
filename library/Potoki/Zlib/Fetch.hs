@@ -7,7 +7,10 @@ import qualified Codec.Compression.Zlib as B
 import qualified Data.ByteString.Lazy as C
 
 
-zlibResult :: IORef [ByteString] -> IORef B.ZlibDecoder -> Fetch ByteString -> Fetch (Either B.DecompressionError ByteString)
+zlibResult :: IORef [ByteString]
+           -> IORef B.ZlibDecoder
+           -> Fetch ByteString
+           -> Fetch (Either B.DecompressionError ByteString)
 zlibResult unfetchedChunksRef resultRef (Fetch oldFetchIO) =
   Fetch $ \ nil just ->
   let
