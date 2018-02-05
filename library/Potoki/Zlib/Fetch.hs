@@ -24,6 +24,14 @@ runGzip unfetchedChunksRef resultRef (Fetch oldFetchIO) =
           newResult <- join $ oldFetchIO (nextResult mempty) nextResult
           interpretResult newResult
 
+        -- B.Chunk decodedLazyChunk nextResult ->
+        --   case C.toChunks decodedLazyChunk of
+        --     (headChunk : tailChunks) -> do
+        --       writeIORef resultRef nextResult
+        --       writeIORef unfetchedChunksRef tailChunks
+        --       return (just (Right headChunk))
+        --     _ -> interpretResult nextResult
+
         Z.DecompressOutputAvailable decompressOutput decompressNext -> do
           --                     :: !S.ByteString -> m (DecompressStream m)
           nextResult <- decompressNext
