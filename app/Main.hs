@@ -1,20 +1,15 @@
 module Main where
 
-import Potoki.Zlib.Prelude
+import Potoki.Zlib.Transform (decompress)
 
-import Potoki.Core.IO
 import Potoki.IO (produceAndConsume)
 import Potoki.Produce (transform, fileBytes)
-import Potoki.Consume (printBytes)
--- import qualified Data.ByteString.Lazy as BL
+import Potoki.Consume (printBytes, writeBytesToFile)
 
--- import qualified Data.Attoparsec.Text as I
--- import qualified Data.Attoparsec.ByteString as L
--- import qualified Data.Text as J
 import OptparseApplicative.Simple.IO (parser)
 import OptparseApplicative.Simple.Parser (lenientArgument)
 
-import Potoki.Zlib.Transform
+import Potoki.Zlib.Prelude
 
 data Args = Args {
     filename :: FilePath
@@ -33,13 +28,14 @@ parseArgs = parser "Gzip streaming decompressor" getargs
       lenientArgument
         "ekgport" (Just 'p') (Just "[-p ekgport]") (Just (8000, "8000"))
 
--- main = check "large.txt.gz"
 main = do
   Args file _port <- parseArgs
+  putStrLn $ "Decompressing " <> file <> " ..."
   produceAndConsume (transform (right' decompress) (fileBytes file))
-                    (right' (right' printBytes))
+                    --(right' (right' printBytes))
+                    (right' (right' (writeBytesToFile "output")))
 
--- inputs:
+-- | Potoki example usages:
 
 -- fileBytes :: FilePath -> Produce (Either IOException ByteString)
 -- (fileBytes filename)
