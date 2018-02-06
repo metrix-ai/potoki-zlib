@@ -38,6 +38,8 @@ executable main
     -O2
     -threaded
     -rtsopts
+    "-with-rtsopts=-s -T"
+    -- ^ -s - productivity (does not work with Ctrl+C), T - EKG monitoring
   hs-source-dirs:
     app
   default-extensions:
@@ -58,6 +60,7 @@ executable main
     base >=4.7 && <5,
     base-prelude >=1 && <2,
     bytestring >=0.10 && <0.11,
+    ekg,
     optparse-applicative-simple >=1.0.2 && <1.1,
     potoki >=0.6.1 && <0.7,
     potoki-core >=1.2 && <1.3,

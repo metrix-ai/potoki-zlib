@@ -4,10 +4,14 @@ import Potoki.Zlib.Transform (decompress)
 
 import Potoki.IO (produceAndConsume)
 import Potoki.Produce (transform, fileBytes)
+import qualified Potoki.Transform as PT (take)
+
 import Potoki.Consume (printBytes, writeBytesToFile)
 
 import OptparseApplicative.Simple.IO (parser)
 import OptparseApplicative.Simple.Parser (lenientArgument)
+
+import System.Remote.Monitoring (forkServer)
 
 import Potoki.Zlib.Prelude
 
@@ -29,6 +33,7 @@ parseArgs = parser "Gzip streaming decompressor" getargs
         "ekgport" (Just 'p') (Just "[-p ekgport]") (Just (8000, "8000"))
 
 main = do
+  forkServer "localhost" 8000
   Args file _port <- parseArgs
   putStrLn $ "Decompressing " <> file <> " ..."
   produceAndConsume (transform (right' decompress) (fileBytes file))
