@@ -1,14 +1,16 @@
-{-# LANGUAGE PartialTypeSignatures #-}
-
 module Potoki.Zlib.Fetch (
   runGzip
 ) where
 
-import Potoki.Zlib.Prelude
-
-import Potoki.Core.Fetch
+import           Potoki.Core.Fetch
 
 import qualified Codec.Compression.Zlib.Internal as Z
+
+import           Control.Monad (join)
+import           Data.ByteString
+import           Data.Either
+import           Data.IORef
+import           Prelude
 
 runGzip :: IORef [ByteString]
         -> IORef (Z.DecompressStream IO)
@@ -24,19 +26,11 @@ runGzip unfetchedChunksRef resultRef (Fetch oldFetchIO) =
           newResult <- join $ oldFetchIO (nextResult mempty) nextResult
           interpretResult newResult
 
-        -- B.Chunk decodedLazyChunk nextResult ->
-        --   case C.toChunks decodedLazyChunk of
-        --     (headChunk : tailChunks) -> do
-        --       writeIORef resultRef nextResult
-        --       writeIORef unfetchedChunksRef tailChunks
-        --       return (just (Right headChunk))
-        --     _ -> interpretResult nextResult
-
         Z.DecompressOutputAvailable decompressOutput decompressNext -> do
           --                     :: !S.ByteString -> m (DecompressStream m)
           nextResult <- decompressNext
           writeIORef resultRef nextResult
-          -- writeIORef unfetchedChunksRef nextResult -- TODO: not needed
+          -- writeIORef unfetchedChunksRef nextResult -- TODO: not needed??
           return (just (Right decompressOutput))
 
         Z.DecompressStreamEnd _ ->

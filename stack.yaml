@@ -4,19 +4,7 @@ packages:
 - .
 
 extra-deps:
-
-  # develop
 - bug-1.0.1
-
-  # app
-- attoparsec-data-1.0.3
-- attoparsec-time-1
-- either-5
-- optparse-applicative-simple-1.0.2
-- rerebase-1.2.1
-- rebase-1.2.3
-
-  # library only
 - potoki-0.6.4
 - potoki-core-1.2
 

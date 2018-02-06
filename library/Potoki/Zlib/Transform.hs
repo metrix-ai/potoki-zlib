@@ -4,22 +4,27 @@ module Potoki.Zlib.Transform
 )
 where
 
--- TODO: import ByteString
-import Potoki.Zlib.Prelude
+import Potoki.Zlib.Fetch               (runGzip)
 
-import Potoki.Zlib.Fetch (runGzip)
+import Potoki.Core.Transform           (Transform(..))
 
-import Potoki.Core.Transform
+import Codec.Compression.Zlib.Internal (DecompressError(..),
+                                        decompressIO,
+                                        gzipFormat,
+                                        defaultDecompressParams)
 
-import qualified Codec.Compression.Zlib.Internal as Z
 
-decompress :: Transform ByteString (Either Z.DecompressError ByteString)
+import Data.ByteString
+import Data.Either
+import Data.IORef
+import Prelude
+
+decompress :: Transform ByteString (Either DecompressError ByteString)
 decompress =
   Transform $ \oldFetch -> do
-    unfetchedChunksRef <- newIORef []
     initChunksRef <- newIORef []
-    decompRef <- newIORef (Z.decompressIO
-                           Z.gzipFormat
-                           Z.defaultDecompressParams)
+    decompRef <- newIORef (decompressIO
+                           gzipFormat
+                           defaultDecompressParams)
     return (runGzip initChunksRef decompRef oldFetch)
 
