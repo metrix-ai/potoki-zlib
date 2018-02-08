@@ -5,6 +5,6 @@ packages:
 
 extra-deps:
 - bug-1.0.1
-- potoki-0.6.4
-- potoki-core-1.2
+- potoki-0.7
+- potoki-core-1.3
 
