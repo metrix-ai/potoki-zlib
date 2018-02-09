@@ -1,16 +1,30 @@
 module Potoki.Zlib.Fetch (
-  runGzip
+  runGzip,
+  withCounter
 ) where
 
+import           Potoki.Core.Consume (Consume(..))
 import           Potoki.Core.Fetch
 
 import qualified Codec.Compression.Zlib.Internal as Z
 
 import           Control.Monad (join)
+import           Control.Monad.IO.Class (liftIO)
 import           Data.ByteString
 import           Data.Either
 import           Data.IORef
 import           Prelude
+
+withConsumeHook :: Consume a b -> (a -> IO ()) -> Consume a b
+withConsumeHook (Consume consume) hook = Consume $ \(Fetch fetch) -> consume $
+  Fetch $ \nil just -> join $ fetch (return nil) (\x -> just x <$ hook x)
+
+withCounter :: Consume a b -> (Int -> IO ()) -> Consume a b
+withCounter consume k = do
+  counterVar <- liftIO $ newIORef 0
+  withConsumeHook consume $ \_ -> do
+    modifyIORef' counterVar succ
+    readIORef counterVar >>= k
 
 runGzip :: IORef [ByteString]
         -> IORef (Z.DecompressStream IO)

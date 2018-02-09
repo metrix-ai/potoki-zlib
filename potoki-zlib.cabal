@@ -49,7 +49,6 @@ library
     Haskell2010
   exposed-modules:
     Potoki.Zlib.Transform
-  other-modules:
     Potoki.Zlib.Fetch
   build-depends:
     base >=4.7 && <5,
