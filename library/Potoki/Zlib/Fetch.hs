@@ -22,7 +22,7 @@ runGzip unfetchedChunksRef resultRef (Fetch oldFetchIO) =
     interpretResult result =
       case result of
 
-        Z.DecompressInputRequired nextResult{-decompressSupplyInput-} -> do
+        Z.DecompressInputRequired nextResult -> do
           newResult <- join $ oldFetchIO (nextResult mempty) nextResult
           interpretResult newResult
 
