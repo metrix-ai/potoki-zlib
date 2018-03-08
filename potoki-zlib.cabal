@@ -1,7 +1,7 @@
 name:
   potoki-zlib
 version:
-  0.1.0.1
+  0.2.0
 synopsis:
   Streaming ZLib decompression
 category:
@@ -54,8 +54,8 @@ library
     base >=4.7 && <5,
     base-prelude >=1 && <2,
     bytestring >=0.10 && <0.11,
-    potoki ==0.7,
-    potoki-core ==1.3,
+    potoki,
+    potoki-core,
     zlib >= 0.6.1.2 && < 0.7
   ghc-options:
     -Wall
