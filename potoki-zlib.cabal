@@ -1,7 +1,7 @@
 name:
   potoki-zlib
 version:
-  0.2.0
+  0.3
 synopsis:
   Streaming ZLib decompression
 category:
@@ -50,17 +50,17 @@ library
   exposed-modules:
     Potoki.Zlib.Transform
     Potoki.Zlib.Fetch
+  other-modules:
+    Potoki.Zlib.Prelude
   build-depends:
+    acquire >= 0.2 && < 0.3,
     base >=4.7 && <5,
     base-prelude >=1 && <2,
     bytestring >=0.10 && <0.11,
     potoki,
-    potoki-core,
+    potoki-core >= 2 && < 2.1,
     zlib >= 0.6.1.2 && < 0.7
   ghc-options:
     -Wall
-    -Werror
-    -Wincomplete-uni-patterns
-    -Wincomplete-record-updates
-    -- -Wmissing-import-lists
+    -fno-warn-orphans
 
