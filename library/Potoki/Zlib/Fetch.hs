@@ -1,64 +1,60 @@
 module Potoki.Zlib.Fetch (
   runGzip,
-  withCounter
+  withCounter,
 ) where
 
 import Potoki.Zlib.Prelude
-import Potoki.Core.Consume (Consume(..))
 import Potoki.Core.Fetch
-import qualified Codec.Compression.Zlib.Internal as C
+import Potoki.Core.Consume
+import qualified Codec.Compression.Zlib.Internal as A
 
 
 withConsumeHook :: Consume a b -> (a -> IO ()) -> Consume a b
-withConsumeHook = undefined
-{-
-withConsumeHook (Consume consume) hook = Consume $ \(Fetch fetch) -> consume $
-  Fetch $ \nil just -> join $ fetch (return nil) (\x -> just x <$ hook x)
--}
+withConsumeHook (Consume consume) hook =
+  Consume $ \ (Fetch fetchIO) -> consume $ Fetch $ do
+    fetch <- fetchIO
+    case fetch of
+      Nothing -> return Nothing
+      Just val -> Just val <$ hook val
 
 withCounter :: Consume a b -> (Int -> IO ()) -> Consume a b
-withCounter = undefined
-{-
-withCounter consume k = do
-  counterVar <- liftIO $ newIORef 0
-  withConsumeHook consume $ \_ -> do
-    modifyIORef' counterVar succ
-    readIORef counterVar >>= k
--}
+withCounter consume int2IO =
+  do
+    counterVar <- liftIO $ newIORef 0
+    withConsumeHook consume $ \_ -> do
+      modifyIORef' counterVar succ
+      readIORef counterVar >>= int2IO
+
 runGzip :: IORef [ByteString]
-        -> IORef (C.DecompressStream IO)
+        -> IORef (A.DecompressStream IO)
         -> Fetch ByteString
-        -> Fetch (Either C.DecompressError ByteString)
-runGzip = undefined
-{-
+        -> Fetch (Either A.DecompressError ByteString)
 runGzip unfetchedChunksRef resultRef (Fetch oldFetchIO) =
   Fetch $ do
     let
-      interpretResult result =
+      interpretResult resultIO = do
+        result <- resultIO
         case result of
-
-          C.DecompressInputRequired nextResult -> do
-            newResult <- join $ oldFetchIO (nextResult mempty) nextResult
+          A.DecompressInputRequired nextResult -> do
+            newResult <- do
+              oldFetch <- oldFetchIO
+              return $ case oldFetch of
+                Nothing  -> nextResult mempty
+                Just val -> nextResult val
             interpretResult newResult
-
-          C.DecompressOutputAvailable decompressOutput decompressNext -> do
+          A.DecompressOutputAvailable decompressOutput decompressNext -> do
+            --                     :: !S.ByteString -> m (DecompressStream m)
             nextResult <- decompressNext
             writeIORef resultRef nextResult
             -- writeIORef unfetchedChunksRef nextResult -- TODO: not needed??
             return (Just (Right decompressOutput))
-
-          C.DecompressStreamEnd _ ->
+          A.DecompressStreamEnd _ ->
             return Nothing
-  
-          C.DecompressStreamError err ->
+          A.DecompressStreamError err ->
             return (Just (Left err))
-
     unfetchedChunks <- readIORef unfetchedChunksRef
     case unfetchedChunks of
       headChunk : unfetchedChunksTail -> do
         writeIORef unfetchedChunksRef unfetchedChunksTail
         return (Just (Right headChunk))
-      _ -> do
-        result <- readIORef resultRef
-        interpretResult result
--}
+      _ -> interpretResult $ readIORef resultRef
